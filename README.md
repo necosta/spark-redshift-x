@@ -22,7 +22,7 @@ reading the data from a centralised repository.
 * Draw the diagram
 * Add high-level description
 
-### Problem statement
+#### Problem statement
 
 ABC company wants to provide reports to their end customer from one time daily to real time.
 
