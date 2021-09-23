@@ -14,7 +14,10 @@ trait WithSpark {
       .appName(AppName)
       .getOrCreate()
     Logger.getLogger(PackageName).setLevel(Level.INFO)
-    spark.sparkContext.setLogLevel(Level.ERROR.toString)
+    val sc = spark.sparkContext
+    sc.setLogLevel(Level.ERROR.toString)
+    sc.hadoopConfiguration.set("fs.s3a.access.key", "fillMe")
+    sc.hadoopConfiguration.set("fs.s3a.secret.key", "fillMe")
     spark
   }
 

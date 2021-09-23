@@ -1,5 +1,6 @@
 package com.necosta.etl
 
+import com.necosta.etl.step.{Reader, Writer}
 import org.slf4j.LoggerFactory
 
 class Runner extends WithSpark {
@@ -9,11 +10,22 @@ class Runner extends WithSpark {
   def runPipeline(): Unit = {
     import spark.implicits._
 
-    logger.info("Start running job...")
+    logger.info("Started running workflow...")
 
     // ToDo: Add pipeline steps here...
-    // ToDo: Remove this sample code
-    val sourceDF = List("abc", "def").toDF("name")
-    logger.info("Count: " + sourceDF.count())
+
+    // Test Spark Redshift writer
+    val dfWriter = List("abc", "def")
+      .toDF("name")
+
+    new Writer().write(dfWriter)
+
+    logger.info(s"Wrote ${dfWriter.count()} rows.")
+
+    // Test Spark Redshift reader
+    val dfReader = new Reader().read()
+    logger.info(s"Read ${dfReader.count()} rows.")
+
+    logger.info("Finished running workflow")
   }
 }
