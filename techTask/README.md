@@ -21,7 +21,13 @@
     --jars $PATH_TO_JAR/redshift-jdbc42-2.0.0.4.jar \
     --class com.necosta.etl.Main \
     --master local[2] \
-    $PATH_TO_JAR/techTask/target/scala-2.12/etl-workflow-assembly-0.1.0-SNAPSHOT.jar
+    $PATH_TO_JAR/techTask/target/scala-2.12/etl-workflow-assembly-0.1.0-SNAPSHOT.jar \
+    --jdbcUrl jdbc:redshift://clusterName.redshift.amazonaws.com:5439/dbName \
+    --s3TempDir s3a://bucketName/folderName/ \
+    --dbUser fillMe \
+    --dbPassword fillMe \
+    --s3AccessKey fillMe \
+    --s3SecretKey fillMe
 ```
 
 or
