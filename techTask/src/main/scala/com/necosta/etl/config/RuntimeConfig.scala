@@ -3,6 +3,17 @@ package com.necosta.etl.config
 import org.rogach.scallop.exceptions.{Exit, MajorInternalException}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 
+object RuntimeConfig {
+  def buildMock(): RuntimeConfig = {
+    new RuntimeConfig(Seq("--s3AccessKey", "dummy",
+      "--s3SecretKey", "dummy",
+      "--jdbcUrl", "dummy",
+      "--dbPassword", "dummy",
+      "--s3TempDir", "dummy"
+      ))
+  }
+}
+
 class RuntimeConfig(args: Seq[String]) extends ScallopConf(args) {
 
   val s3AccessKey: ScallopOption[String] = opt[String](

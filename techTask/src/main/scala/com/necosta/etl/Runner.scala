@@ -1,36 +1,45 @@
 package com.necosta.etl
 
-import com.necosta.etl.config.RuntimeConfig
-import com.necosta.etl.step.{Reader, Writer}
+import com.necosta.etl.config.{AwsConfig, RuntimeConfig}
+import com.necosta.etl.step.{Importer, Reader, Writer}
 import org.slf4j.LoggerFactory
 
-class Runner(runtimeConf: RuntimeConfig) extends WithSpark {
+class Runner(runtimeConf: RuntimeConfig) {
 
   private val logger = LoggerFactory.getLogger(getClass.getName)
 
   def runPipeline(): Unit = {
-    import spark.implicits._
 
     logger.info("Started running workflow...")
 
-    // Set S3 credentials
-    sc.hadoopConfiguration.set("fs.s3a.access.key", runtimeConf.s3AccessKey())
-    sc.hadoopConfiguration.set("fs.s3a.secret.key", runtimeConf.s3SecretKey())
+    new AwsConfig(runtimeConf).setAwsS3Creds
 
-    // ToDo: Add pipeline steps here...
+    val importer = new Importer()
+    val reader = new Reader(runtimeConf)
+    val writer = new Writer(runtimeConf)
 
-    // Test Spark Redshift writer
-    val dfWriter = List("abc", "def")
-      .toDF("name")
+    // For each dimension/fact file...
+    // ToDo: Fill remaining tables
+    Seq("DimAccount.csv").foreach(fileName => {
+      logger.info(s"Started importing $fileName")
+      val fileNameWithoutExtension = getFileNameWithoutExtension(fileName)
 
-    new Writer(runtimeConf).write(dfWriter)
+      logger.info(s"Convert $fileName into dataframe")
+      val df = reader.readFromCsv(fileName)
 
-    logger.info(s"Wrote ${dfWriter.count()} rows.")
+      logger.info(s"Dataframe $fileName has ${df.count()} rows.")
 
-    // Test Spark Redshift reader
-    val dfReader = new Reader(runtimeConf).read()
-    logger.info(s"Read ${dfReader.count()} rows.")
+      writer.write(df, fileNameWithoutExtension)
+
+      logger.info(s"Finished importing $fileName")
+    })
 
     logger.info("Finished running workflow")
+  }
+
+  def getFileNameWithoutExtension(fileName: String): String = {
+    val indexOfDot = fileName.indexOf(".")
+    if(indexOfDot > 0) fileName.substring(0, indexOfDot)
+    else fileName
   }
 }

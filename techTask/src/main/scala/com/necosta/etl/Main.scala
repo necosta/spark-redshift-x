@@ -12,8 +12,6 @@ object Main {
     def main(args: Array[String]): Unit = {
         logger.info("Data import started")
 
-        args.foreach(a => logger.info(a))
-
         val runtimeConf = new RuntimeConfig(args)
         val pipelineResult = Try {
             new Runner(runtimeConf).runPipeline()

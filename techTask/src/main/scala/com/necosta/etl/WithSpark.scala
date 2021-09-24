@@ -12,6 +12,7 @@ trait WithSpark {
   implicit val spark: SparkSession = {
     val spark = SparkSession.builder()
       .appName(AppName)
+      .enableHiveSupport()
       .getOrCreate()
     Logger.getLogger(PackageName).setLevel(Level.INFO)
     val sc = spark.sparkContext

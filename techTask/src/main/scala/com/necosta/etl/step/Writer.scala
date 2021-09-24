@@ -6,7 +6,7 @@ import org.apache.spark.sql.{DataFrame, SaveMode}
 
 class Writer(runtimeConf: RuntimeConfig) extends Utils with WithSpark {
 
-  def write(df: DataFrame): Unit = {
+  def write(df: DataFrame, targetTable: String): Unit = {
     df.write
       .format(sourceFormat)
       .option("url", runtimeConf.jdbcUrl())

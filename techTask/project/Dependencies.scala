@@ -35,7 +35,8 @@ object Dependencies {
   val providedDependencies = Seq(
     "org.apache.spark" %% "spark-core" % sparkVersion % Provided,
     "org.apache.spark" %% "spark-sql" % sparkVersion % Provided,
-    "org.apache.spark" %% "spark-avro" % sparkVersion % Provided
+    "org.apache.spark" %% "spark-avro" % sparkVersion % Provided,
+    "org.apache.spark" %% "spark-hive" % sparkVersion % Provided
   )
 
   private val scalaTestVersion = "3.2.10"
