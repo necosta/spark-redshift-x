@@ -1,12 +1,41 @@
 package com.necosta.etl
 
 import com.necosta.etl.config.{AwsConfig, RuntimeConfig}
-import com.necosta.etl.step.{Importer, Reader, Writer}
+import com.necosta.etl.step.{Importer, Reader, Transformer, Writer}
 import org.slf4j.LoggerFactory
 
 class Runner(runtimeConf: RuntimeConfig) {
 
   private val logger = LoggerFactory.getLogger(getClass.getName)
+
+  private val tablesToImport = Seq(
+    "DimAccount.csv",
+    "DimCurrency.csv",
+    "DimCustomer.csv",
+    "DimDate.csv",
+    "DimDepartmentGroup.csv",
+    "DimEmployee.csv",
+    "DimGeography.csv",
+    "DimOrganization.csv",
+    "DimProduct.csv",
+    "DimProductCategory.csv",
+    "DimProductSubcategory.csv",
+    "DimPromotion.csv",
+    "DimReseller.csv",
+    "DimSalesReason.csv",
+    "DimSalesTerritory.csv",
+    "DimScenario.csv",
+    "FactAdditionalInternationalProductDescription.csv",
+    "FactCallCenter.csv",
+    "FactCurrencyRate.csv",
+    "FactFinance.csv",
+    "FactInternetSales.csv",
+    "FactInternetSalesReason.csv",
+    "FactProductInventory.csv",
+    "FactResellerSales.csv",
+    "FactSalesQuota.csv",
+    "FactSurveyResponse.csv"
+  )
 
   def runPipeline(): Unit = {
 
@@ -16,11 +45,11 @@ class Runner(runtimeConf: RuntimeConfig) {
 
     val importer = new Importer()
     val reader = new Reader(runtimeConf)
+    val transformer = new Transformer()
     val writer = new Writer(runtimeConf)
 
     // For each dimension/fact file...
-    // ToDo: Fill remaining tables
-    Seq("DimAccount.csv").foreach(fileName => {
+    tablesToImport.foreach(fileName => {
       logger.info(s"Started importing $fileName")
       val fileNameWithoutExtension = getFileNameWithoutExtension(fileName)
 
@@ -29,7 +58,10 @@ class Runner(runtimeConf: RuntimeConfig) {
 
       logger.info(s"Dataframe $fileName has ${df.count()} rows.")
 
-      writer.write(df, fileNameWithoutExtension)
+      val tablesDDLScript = importer.getTablesDDLScript
+      val schemaDDL = importer.getSchemaDDL(fileNameWithoutExtension, tablesDDLScript)
+      val transformedDf = transformer.transform(df, schemaDDL)
+      writer.write(transformedDf, fileNameWithoutExtension)
 
       logger.info(s"Finished importing $fileName")
     })

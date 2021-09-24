@@ -13,7 +13,7 @@ class Reader(runtimeConf: RuntimeConfig) extends Utils with WithSpark {
 
     spark.read
       .option("header", "false")
-      .option("inferSchema", "true")
+      .option("inferSchema", "false") // ToDo: Check infer schema effects
       .option("delimiter", "|")
       .option("charset", "UTF-8")
       .csv(SparkFiles.get(csvFileName))
