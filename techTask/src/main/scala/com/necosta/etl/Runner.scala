@@ -1,7 +1,7 @@
 package com.necosta.etl
 
 import com.necosta.etl.config.{AwsConfig, RuntimeConfig}
-import com.necosta.etl.step.{Importer, Reader, Transformer, Writer}
+import com.necosta.etl.step.{Parser, Reader, Transformer, Writer}
 import org.slf4j.LoggerFactory
 
 class Runner(runtimeConf: RuntimeConfig) {
@@ -43,7 +43,7 @@ class Runner(runtimeConf: RuntimeConfig) {
 
     new AwsConfig(runtimeConf).setAwsS3Creds
 
-    val importer = new Importer()
+    val parser = new Parser()
     val reader = new Reader(runtimeConf)
     val transformer = new Transformer()
     val writer = new Writer(runtimeConf)
@@ -58,8 +58,8 @@ class Runner(runtimeConf: RuntimeConfig) {
 
       logger.info(s"Dataframe $fileName has ${df.count()} rows.")
 
-      val tablesDDLScript = importer.getTablesDDLScript
-      val schemaDDL = importer.getSchemaDDL(fileNameWithoutExtension, tablesDDLScript)
+      val tablesDDLScript = parser.getTablesDDLScript
+      val schemaDDL = parser.getSchemaDDL(fileNameWithoutExtension, tablesDDLScript)
       val transformedDf = transformer.transform(df, schemaDDL)
       writer.write(transformedDf, fileNameWithoutExtension)
 

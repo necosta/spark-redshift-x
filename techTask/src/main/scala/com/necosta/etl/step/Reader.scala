@@ -19,11 +19,11 @@ class Reader(runtimeConf: RuntimeConfig) extends Utils with WithSpark {
       .csv(SparkFiles.get(csvFileName))
   }
 
-  def readFromRedshift(): DataFrame = {
+  def readFromRedshift(query: String): DataFrame = {
     spark.read
       .format(sourceFormat)
       .option("url", runtimeConf.jdbcUrl())
-      .option("query", s"select * from $targetTable")
+      .option("query", query)
       .option("user", runtimeConf.dbUser())
       .option("password", runtimeConf.dbPassword())
       .option("tempdir", runtimeConf.s3TempDir())

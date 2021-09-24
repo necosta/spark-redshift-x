@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 
 import scala.io.{Codec, Source}
 
-class Importer extends Utils {
+class Parser extends Utils {
 
   private val logger = LoggerFactory.getLogger(getClass.getName)
 
