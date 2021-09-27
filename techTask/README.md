@@ -34,6 +34,25 @@ Download Spark binary and run:
 
 ### Using docker
 
-1. Build docker file: `docker-compose build sparkJob`
+1. Build docker: `docker-compose build sparkJob`
 1. Set secrets on `docker-compose.yml`, env variables section
-1. Run docker file: `docker-compose run sparkJob`
+1. Run docker: `docker-compose run sparkJob`
+
+### Checking data with Apache Zeppelin
+
+1. Load Zeppelin docker: `docker-compose up zeppelin`
+1. Open `http://localhost:8081/`
+
+**Note:** Check https://zeppelin.apache.org/docs/latest/interpreter/jdbc.html#redshift
+
+### Database analysis
+
+Typical [Star schema](https://en.wikipedia.org/wiki/Star_schema) data warehouse database.
+
+* 1 log table - `DatabaseLog.csv`
+* 16 dimension tables
+* 11 fact tables
+* 1 sys table - `sysdiagrams.csv`
+* 1 other table - `ProspectiveBuyer.csv`
+
+Example SQL queries. See [here](https://github.com/trijitghosh/LetsGetChecked/blob/master/src/main/resources/QUERIES.sql)

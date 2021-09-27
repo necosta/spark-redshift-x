@@ -14,3 +14,8 @@ services:
       S3_SECRET_KEY: "secret"
     ports:
       - "4041:4040"
+
+  zeppelin:
+    image: apache/zeppelin:0.10.0
+    ports:
+      - "8081:8080"
