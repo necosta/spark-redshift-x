@@ -14,6 +14,10 @@ class Writer(runtimeConf: RuntimeConfig) extends Utils with WithSpark {
       .option("password", runtimeConf.dbPassword())
       .option("tempdir", runtimeConf.s3TempDir())
       .option("dbtable", targetTable)
+      // https://docs.databricks.com/data/data-sources/aws/amazon-redshift.html
+      .option("extracopyoptions", "EMPTYASNULL")
+      .option("tempformat", "CSV")
+      .option("csvnullstring", "@NULL@")
       .option("forward_spark_s3_credentials", "true")
       .mode(SaveMode.Overwrite)
       .save()

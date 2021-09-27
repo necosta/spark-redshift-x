@@ -64,6 +64,12 @@ class Runner(runtimeConf: RuntimeConfig) {
       writer.write(transformedDf, fileNameWithoutExtension)
 
       logger.info(s"Finished importing $fileName")
+
+      // Visually check write was successful
+      if(logger.isDebugEnabled()) {
+        val df = reader.readFromRedshift(s"SELECT * FROM $fileName")
+        df.show(10, false)
+      }
     })
 
     logger.info("Finished running workflow")
