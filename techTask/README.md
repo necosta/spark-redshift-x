@@ -11,6 +11,7 @@
 1. Build: `sbt compile`
 1. Unit-test: `sbt test`
 1. Package JAR: `sbt assembly`
+1. Code coverage analysis: `sbt clean coverage test coverageReport`
 
 ### How to run Spark application
 
