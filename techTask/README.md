@@ -14,11 +14,11 @@
 
 ### How to run Spark application
 
-1. Download Spark binary and run:
+Download Spark binary and run:
 ```bash
 ./bin/spark-submit \
     --packages org.apache.spark:spark-avro_2.12:3.1.2 \
-    --jars $PATH_TO_JAR/redshift-jdbc42-2.0.0.4.jar \
+    --jars $PATH_TO_JAR/redshift-jdbc42-2.0.0.7.jar \
     --class com.necosta.etl.Main \
     --master local[2] \
     $PATH_TO_JAR/techTask/target/scala-2.12/etl-workflow-assembly-0.1.0-SNAPSHOT.jar \
@@ -29,9 +29,10 @@
     --s3AccessKey fillMe \
     --s3SecretKey fillMe
 ```
+**Note:** Download the Redshift JDBC connector [here](https://s3.amazonaws.com/redshift-downloads/drivers/jdbc/2.0.0.7/redshift-jdbc42-2.0.0.7.jar)
 
-or
+### Using docker
 
-2. Run docker file (**ToDo**)
-
-
+1. Build docker file: `docker-compose build sparkJob`
+1. Set secrets on `docker-compose.yml`, env variables section
+1. Run docker file: `docker-compose run sparkJob`
