@@ -49,7 +49,7 @@ class Runner(runtimeConf: RuntimeConfig) {
     val writer = new Writer(runtimeConf)
 
     // For each dimension/fact file...
-    tablesToImport.foreach(fileName => {
+    tablesToImport.par.foreach(fileName => {
       logger.info(s"Started importing $fileName")
       val fileNameWithoutExtension = getFileNameWithoutExtension(fileName)
 
@@ -67,8 +67,8 @@ class Runner(runtimeConf: RuntimeConfig) {
 
       // Visually check write was successful
       if(logger.isDebugEnabled()) {
-        val df = reader.readFromRedshift(s"SELECT * FROM $fileName")
-        df.show(10, false)
+        val dfRedshiftReader = reader.readFromRedshift(s"SELECT * FROM $fileNameWithoutExtension")
+        dfRedshiftReader.show(5, false)
       }
     })
 

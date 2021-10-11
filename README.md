@@ -1,6 +1,6 @@
 # Tech challenge
 
-Let's Get Checked technical challenge
+Technical challenge using Spark and Redshift.
 
 ## Technical task
 
